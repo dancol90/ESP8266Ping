@@ -9,14 +9,16 @@ extern "C" {
   #include <ping.h>
 }
 
-#define DEBUG_PING(...) Serial.printf(__VA_ARGS__)
-//#define DEBUG_PING(...)
+//#define DEBUG_PING(...) Serial.printf(__VA_ARGS__)
+#define DEBUG_PING(...)
 
 class PingClass {
   public:
     PingClass();
 
     bool ping(IPAddress dest, byte count = 5);
+
+    int averageTime();
 
   protected:
     static void _ping_sent_cb(void *opt, void *pdata);

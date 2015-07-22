@@ -35,6 +35,10 @@ bool PingClass::ping(IPAddress dest, byte count) {
     return (_success > 0);
 }
 
+int PingClass::averageTime() {
+    return _avg_time;
+}
+
 void PingClass::_ping_recv_cb(void *opt, void *resp) {
     // Cast the parameters to get some usable info
     ping_resp*   ping_resp = reinterpret_cast<struct ping_resp*>(resp);
