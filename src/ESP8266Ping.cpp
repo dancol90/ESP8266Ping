@@ -53,6 +53,15 @@ bool PingClass::ping(IPAddress dest, byte count) {
     return (_success > 0);
 }
 
+bool PingClass::ping(const char* host, byte count) {
+    IPAddress remote_addr;
+
+    if (WiFi.hostByName(host, remote_addr))
+        return ping(remote_addr, count);
+
+    return false;
+}
+
 int PingClass::averageTime() {
     return _avg_time;
 }

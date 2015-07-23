@@ -34,7 +34,8 @@ class PingClass {
   public:
     PingClass();
 
-    bool ping(IPAddress dest, byte count = 5);
+    bool ping(IPAddress dest,   byte count = 5);
+    bool ping(const char* host, byte count = 5);
 
     int averageTime();
 
