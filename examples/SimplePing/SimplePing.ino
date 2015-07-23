@@ -1,9 +1,6 @@
 /*
- *  This sketch sends data via HTTP GET requests to data.sparkfun.com service.
- *
- *  You need to get streamId and privateKey at data.sparkfun.com and paste them
- *  below. Or just customize this script to talk to other HTTP servers.
- *
+ * With this library an ESP8266 can ping a remote machine and know if it's reachable. 
+ * It provides some basic measurements on ping messages (avg response time).
  */
 
 #include <ESP8266WiFi.h>
