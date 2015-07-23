@@ -1,6 +1,5 @@
 /*
- * With this library an ESP8266 can ping a remote machine and know if it's reachable. 
- * It provides some basic measurements on ping messages (avg response time).
+ * This example show how to ping a remote machine using it's hostname
  */
 
 #include <ESP8266WiFi.h>
@@ -9,7 +8,7 @@
 const char* ssid     = "ssid";
 const char* password = "passphrase";
 
-const IPAddress remote_ip(192, 168, 0, 1);
+const char* remote_host = "www.google.com";
 
 void setup() {
   Serial.begin(115200);
@@ -31,10 +30,10 @@ void setup() {
   Serial.print("WiFi connected with ip ");  
   Serial.println(WiFi.localIP());
 
-  Serial.print("Pinging ip ");
-  Serial.println(remote_ip);
+  Serial.print("Pinging host ");
+  Serial.println(remote_host);
 
-  if(Ping.ping(remote_ip)) {
+  if(Ping.ping(remote_host)) {
     Serial.println("Success!!");
   } else {
     Serial.println("Error :(");
