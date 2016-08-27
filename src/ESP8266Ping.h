@@ -27,8 +27,11 @@ extern "C" {
   #include <ping.h>
 }
 
-//#define DEBUG_PING(...) Serial.printf(__VA_ARGS__)
-#define DEBUG_PING(...)
+#ifdef ENABLE_DEBUG_PING
+  #define DEBUG_PING(...) Serial.printf(__VA_ARGS__)
+#else
+  #define DEBUG_PING(...)
+#endif
 
 class PingClass {
   public:
