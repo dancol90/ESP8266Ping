@@ -17,8 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef ESP826Ping_H
-#define ESP826Ping_H
+#ifndef ESP8266Ping_H
+#define ESP8266Ping_H
 
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
@@ -53,6 +53,7 @@ class PingClass {
     static int _avg_time;
 };
 
-extern PingClass Ping;
+#include "ESP8266Ping.impl.h"
+PingClass Ping;
 
 #endif
