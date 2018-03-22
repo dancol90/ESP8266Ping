@@ -96,7 +96,7 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
     // Is it time to end?
     // Don't using seqno because it does not increase on error
     if (_success + _errors == _expected_count) {
-        _avg_time = _avg_time / _expected_count;
+        _avg_time = _success > 0 ? _avg_time / _success : 0;
 
         DEBUG_PING("Avg resp time %d ms\n", _avg_time);
 
