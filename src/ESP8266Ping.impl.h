@@ -22,7 +22,7 @@ extern "C" void esp_yield();
 
 PingClass::PingClass() {}
 
-bool PingClass::ping(IPAddress dest, byte count) {
+bool PingClass::ping(IPAddress dest, unsigned int count) {
     _expected_count = count;
     _errors = 0;
     _success = 0;
@@ -51,7 +51,7 @@ bool PingClass::ping(IPAddress dest, byte count) {
     return (_success > 0);
 }
 
-bool PingClass::ping(const char* host, byte count) {
+bool PingClass::ping(const char* host, unsigned int count) {
     IPAddress remote_addr;
 
     if (WiFi.hostByName(host, remote_addr))
