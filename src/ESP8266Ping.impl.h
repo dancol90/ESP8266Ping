@@ -27,7 +27,10 @@ bool PingClass::ping(IPAddress dest, unsigned int count) {
     _errors = 0;
     _success = 0;
 
+    _min_time = INT_MAX;
     _avg_time = 0;
+    _max_time = 0;
+    
 
     memset(&_options, 0, sizeof(struct ping_option));
 
@@ -60,8 +63,16 @@ bool PingClass::ping(const char* host, unsigned int count) {
     return false;
 }
 
+int PingClass::minTime() {
+    return _min_time;
+}
+
 int PingClass::averageTime() {
     return _avg_time;
+}
+
+int PingClass::maxTime() {
+    return _max_time;
 }
 
 void PingClass::_ping_recv_cb(void *opt, void *resp) {
@@ -75,6 +86,11 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
     else {
         _success++;
         _avg_time += ping_resp->resp_time;
+        if(ping_resp->resp_time < _min_time)
+          _min_time = ping_resp->resp_time;
+        if(ping_resp->resp_time > _max_time)
+          _max_time = ping_resp->resp_time;
+        
     }
 
     // Some debug info
@@ -98,7 +114,7 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
     if (_success + _errors == _expected_count) {
         _avg_time = _success > 0 ? _avg_time / _success : 0;
 
-        DEBUG_PING("Avg resp time %d ms\n", _avg_time);
+        DEBUG_PING("Resp times min %d, ave %d, max %d ms\n", _min_time, _avg_time, _max_time);
 
         // Done, return to main functiom
         esp_schedule();
@@ -108,4 +124,6 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
 byte PingClass::_expected_count = 0;
 byte PingClass::_errors = 0;
 byte PingClass::_success = 0;
-int  PingClass::_avg_time = 0;
+uint PingClass::_min_time = 0;
+uint PingClass::_avg_time = 0;
+uint PingClass::_max_time = 0;
