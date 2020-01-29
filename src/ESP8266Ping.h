@@ -40,7 +40,10 @@ class PingClass {
     bool ping(IPAddress dest,   unsigned int count = 5);
     bool ping(const char* host, unsigned int count = 5);
 
+    int minTime();
     int averageTime();
+    int maxTime();
+    
 
   protected:
     static void _ping_sent_cb(void *opt, void *pdata);
@@ -50,7 +53,7 @@ class PingClass {
     ping_option _options;
 
     static byte _expected_count, _errors, _success;
-    static int _avg_time;
+    static uint _min_time, _avg_time, _max_time;
 };
 
 #include "ESP8266Ping.impl.h"
