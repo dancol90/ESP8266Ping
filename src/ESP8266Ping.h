@@ -43,7 +43,6 @@ class PingClass {
     int minTime();
     int averageTime();
     int maxTime();
-    
 
   protected:
     static void _ping_sent_cb(void *opt, void *pdata);
