@@ -114,7 +114,7 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
     if (_success + _errors == _expected_count) {
         _avg_time = _success > 0 ? _avg_time / _success : 0;
 
-        DEBUG_PING("Resp times min %d, ave %d, max %d ms\n", _min_time, _avg_time, _max_time);
+        DEBUG_PING("Resp times min %d, avg %d, max %d ms\n", _min_time, _avg_time, _max_time);
 
         // Done, return to main functiom
         esp_schedule();
