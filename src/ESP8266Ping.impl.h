@@ -64,7 +64,7 @@ int PingClass::averageTime() {
     return _avg_time;
 }
 
-void PingClass::_ping_recv_cb(void *opt, void *resp) {
+void PingClass::_ping_recv_cb(void *opt __attribute__((unused)), void *resp) {
     // Cast the parameters to get some usable info
     ping_resp*   ping_resp = reinterpret_cast<struct ping_resp*>(resp);
     //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
