@@ -55,7 +55,6 @@ class PingClass {
     static uint _min_time, _avg_time, _max_time;
 };
 
-#include "ESP8266Ping.impl.h"
-PingClass Ping;
+extern PingClass Ping;
 
 #endif
