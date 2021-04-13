@@ -17,8 +17,12 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include <ESP8266Ping.h>
+
 extern "C" void esp_schedule();
 extern "C" void esp_yield();
+
+PingClass Ping;
 
 PingClass::PingClass() {}
 
