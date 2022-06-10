@@ -34,6 +34,12 @@ void setup() {
   Serial.print("Pinging ip ");
   Serial.println(remote_ip);
 
+#if HAS_PHY_CAPTURE
+  // watch ICMP from packet capture facility
+  netdump.printDump(Serial, NetCapture::Packet::PacketDetail::FULL,
+                    [](NetCapture::Packet p){ return p.isICMP(); });
+#endif
+
   if(Ping.ping(remote_ip)) {
     Serial.println("Success!!");
   } else {
