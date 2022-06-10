@@ -18,7 +18,6 @@
 */
 
 extern "C" void esp_schedule();
-extern "C" void esp_yield();
 
 PingClass::PingClass() {}
 
@@ -37,7 +36,8 @@ bool PingClass::ping(IPAddress dest, unsigned int count) {
     // Repeat count (how many time send a ping message to destination)
     _options.count = count;
     // Time interval between two ping (seconds??)
-    _options.coarse_time = 1;
+    static constexpr auto interval_seconds = 1;
+    _options.coarse_time = interval_seconds;
     // Destination machine
     _options.ip = dest;
 
@@ -45,10 +45,16 @@ bool PingClass::ping(IPAddress dest, unsigned int count) {
     _options.recv_function = reinterpret_cast<ping_recv_function>(&PingClass::_ping_recv_cb);
     _options.sent_function = NULL; //reinterpret_cast<ping_sent_function>(&_ping_sent_cb);
 
+    // boundary
+    static constexpr auto timeout_times = 2; // multiplier of expected duration
+    static constexpr auto interval_ms = interval_seconds * 1000;
+    auto boundary_ms = count * interval_ms * timeout_times;
     // Let's go!
     if(ping_start(&_options)) {
         // Suspend till the process end
-        esp_yield();
+        // .. or until walltime boundary
+        // (delay() is interrupted by esp_schedule())
+        delay(boundary_ms);
     }
 
     return (_success > 0);
@@ -78,7 +84,7 @@ int PingClass::maxTime() {
 void PingClass::_ping_recv_cb(void *opt, void *resp) {
     // Cast the parameters to get some usable info
     ping_resp*   ping_resp = reinterpret_cast<struct ping_resp*>(resp);
-    //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
+    (void)opt; //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
 
     // Error or success?
     if (ping_resp->ping_err == -1)
