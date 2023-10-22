@@ -55,6 +55,8 @@ class PingClass
 
     byte _expected_count, _errors, _success;
     uint _min_time, _avg_time, _max_time;
+
+    bool _done;
 };
 
 extern PingClass Ping;
