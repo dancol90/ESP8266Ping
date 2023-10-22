@@ -53,8 +53,8 @@ class PingClass
     IPAddress _dest;
     ping_option _options;
 
-    static byte _expected_count, _errors, _success;
-    static uint _min_time, _avg_time, _max_time;
+    byte _expected_count, _errors, _success;
+    uint _min_time, _avg_time, _max_time;
 };
 
 extern PingClass Ping;
