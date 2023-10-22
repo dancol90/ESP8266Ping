@@ -23,7 +23,8 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
-extern "C" {
+extern "C"
+{
   #include <ping.h>
 }
 
@@ -33,7 +34,8 @@ extern "C" {
   #define DEBUG_PING(...)
 #endif
 
-class PingClass {
+class PingClass
+{
   public:
     PingClass();
 
