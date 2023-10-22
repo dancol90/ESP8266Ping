@@ -24,7 +24,8 @@ extern "C" void esp_yield();
 
 PingClass::PingClass() {}
 
-bool PingClass::ping(IPAddress dest, unsigned int count) {
+bool PingClass::ping(IPAddress dest, unsigned int count) 
+{
     _expected_count = count;
     _errors = 0;
     _success = 0;
@@ -33,7 +34,6 @@ bool PingClass::ping(IPAddress dest, unsigned int count) {
     _avg_time = 0;
     _max_time = 0;
     
-
     memset(&_options, 0, sizeof(struct ping_option));
 
     // Repeat count (how many time send a ping message to destination)
@@ -48,7 +48,8 @@ bool PingClass::ping(IPAddress dest, unsigned int count) {
     _options.sent_function = NULL; //reinterpret_cast<ping_sent_function>(&_ping_sent_cb);
 
     // Let's go!
-    if(ping_start(&_options)) {
+    if(ping_start(&_options))
+    {
         // Suspend till the process end
         esp_yield();
     }
@@ -56,7 +57,8 @@ bool PingClass::ping(IPAddress dest, unsigned int count) {
     return (_success > 0);
 }
 
-bool PingClass::ping(const char* host, unsigned int count) {
+bool PingClass::ping(const char* host, unsigned int count)
+{
     IPAddress remote_addr;
 
     if (WiFi.hostByName(host, remote_addr))
@@ -65,19 +67,23 @@ bool PingClass::ping(const char* host, unsigned int count) {
     return false;
 }
 
-int PingClass::minTime() {
+int PingClass::minTime() 
+{
     return _min_time;
 }
 
-int PingClass::averageTime() {
+int PingClass::averageTime()
+{
     return _avg_time;
 }
 
-int PingClass::maxTime() {
+int PingClass::maxTime()
+{
     return _max_time;
 }
 
-void PingClass::_ping_recv_cb(void *opt, void *resp) {
+void PingClass::_ping_recv_cb(void *opt, void *resp)
+{
     // Cast the parameters to get some usable info
     ping_resp*   ping_resp = reinterpret_cast<struct ping_resp*>(resp);
     //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
@@ -85,14 +91,14 @@ void PingClass::_ping_recv_cb(void *opt, void *resp) {
     // Error or success?
     if (ping_resp->ping_err == -1)
         _errors++;
-    else {
+    else
+    {
         _success++;
         _avg_time += ping_resp->resp_time;
         if(ping_resp->resp_time < _min_time)
           _min_time = ping_resp->resp_time;
         if(ping_resp->resp_time > _max_time)
-          _max_time = ping_resp->resp_time;
-        
+          _max_time = ping_resp->resp_time; 
     }
 
     // Some debug info
