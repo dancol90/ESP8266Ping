@@ -20,7 +20,6 @@
 #include "ESP8266Ping.h"
 
 extern "C" void esp_schedule();
-extern "C" void esp_yield();
 
 PingClass::PingClass() :
   _expected_count(0),
@@ -41,6 +40,8 @@ bool PingClass::ping(IPAddress dest, unsigned int count)
   _min_time = INT_MAX;
   _avg_time = 0;
   _max_time = 0;
+
+  _done = false;
   
   memset(&_options, 0, sizeof(struct ping_option));
 
@@ -61,7 +62,11 @@ bool PingClass::ping(IPAddress dest, unsigned int count)
   if(ping_start(&_options))
   {
     // Suspend till the process end
-    esp_yield();
+    unsigned int delay_time = _options.coarse_time * 1000;
+    // Wait until the process is done
+    // NOTE: delay() is interrupted by esp_schedule()
+    while (!_done)
+      delay(delay_time);
   }
 
   return (_success > 0);
@@ -137,7 +142,8 @@ void PingClass::_ping_recv_cb(void *opt, void *resp)
 
     DEBUG_PING("Resp times min %d, avg %d, max %d ms\n", self->_min_time, self->_avg_time, self->_max_time);
 
-    // Done, return to main functiom
+    // Done, return to main function
+    self->_done = true;
     esp_schedule();
   }
 }
