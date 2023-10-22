@@ -22,7 +22,15 @@
 extern "C" void esp_schedule();
 extern "C" void esp_yield();
 
-PingClass::PingClass() {}
+PingClass::PingClass() :
+  _expected_count(0),
+  _errors(0),
+  _success(0),
+  _min_time(0),
+  _avg_time(0),
+  _max_time(0)
+{
+}
 
 bool PingClass::ping(IPAddress dest, unsigned int count) 
 {
@@ -42,6 +50,8 @@ bool PingClass::ping(IPAddress dest, unsigned int count)
     _options.coarse_time = 1;
     // Destination machine
     _options.ip = dest;
+    // A reference to this instance to access its fields
+    _options.reverse = this;
 
     // Callbacks
     _options.recv_function = reinterpret_cast<ping_recv_function>(&PingClass::_ping_recv_cb);
@@ -86,19 +96,21 @@ void PingClass::_ping_recv_cb(void *opt, void *resp)
 {
     // Cast the parameters to get some usable info
     ping_resp*   ping_resp = reinterpret_cast<struct ping_resp*>(resp);
-    //ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
+    ping_option* ping_opt  = reinterpret_cast<struct ping_option*>(opt);
+
+    PingClass* self = reinterpret_cast<PingClass*>(ping_opt->reverse);
 
     // Error or success?
     if (ping_resp->ping_err == -1)
         _errors++;
     else
     {
-        _success++;
-        _avg_time += ping_resp->resp_time;
-        if(ping_resp->resp_time < _min_time)
-          _min_time = ping_resp->resp_time;
-        if(ping_resp->resp_time > _max_time)
-          _max_time = ping_resp->resp_time; 
+        self->_success++;
+        self->_avg_time += ping_resp->resp_time;
+        if(ping_resp->resp_time < self->_min_time)
+          self->_min_time = ping_resp->resp_time;
+        if(ping_resp->resp_time > self->_max_time)
+          self->_max_time = ping_resp->resp_time; 
     }
 
     // Some debug info
@@ -119,21 +131,15 @@ void PingClass::_ping_recv_cb(void *opt, void *resp)
 
     // Is it time to end?
     // Don't using seqno because it does not increase on error
-    if (_success + _errors == _expected_count) {
-        _avg_time = _success > 0 ? _avg_time / _success : 0;
+    if (self->_success + self->_errors == self->_expected_count)
+    {
+        self->_avg_time = self->_success > 0 ? self->_avg_time / self->_success : 0;
 
-        DEBUG_PING("Resp times min %d, avg %d, max %d ms\n", _min_time, _avg_time, _max_time);
+        DEBUG_PING("Resp times min %d, avg %d, max %d ms\n", self->_min_time, self->_avg_time, self->_max_time);
 
         // Done, return to main functiom
         esp_schedule();
     }
 }
-
-byte PingClass::_expected_count = 0;
-byte PingClass::_errors = 0;
-byte PingClass::_success = 0;
-uint PingClass::_min_time = 0;
-uint PingClass::_avg_time = 0;
-uint PingClass::_max_time = 0;
 
 PingClass Ping;
