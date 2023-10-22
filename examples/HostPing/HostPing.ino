@@ -10,7 +10,8 @@ const char* password = "passphrase";
 
 const char* remote_host = "www.google.com";
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   delay(10);
 
@@ -21,7 +22,8 @@ void setup() {
   
   WiFi.begin(ssid, password);
   
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(100);
     Serial.print(".");
   }
@@ -33,11 +35,15 @@ void setup() {
   Serial.print("Pinging host ");
   Serial.println(remote_host);
 
-  if(Ping.ping(remote_host)) {
+  if(Ping.ping(remote_host))
+  {
     Serial.println("Success!!");
-  } else {
+  } else
+  {
     Serial.println("Error :(");
   }
 }
 
-void loop() { }
+void loop()
+{
+}

@@ -11,7 +11,8 @@ const char* password = "passphrase";
 
 const IPAddress remote_ip(192, 168, 0, 1);
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   delay(10);
 
@@ -22,7 +23,8 @@ void setup() {
   
   WiFi.begin(ssid, password);
   
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.status() != WL_CONNECTED)
+  {
     delay(100);
     Serial.print(".");
   }
@@ -34,11 +36,16 @@ void setup() {
   Serial.print("Pinging ip ");
   Serial.println(remote_ip);
 
-  if(Ping.ping(remote_ip)) {
+  if(Ping.ping(remote_ip))
+  {
     Serial.println("Success!!");
-  } else {
+  }
+  else
+  {
     Serial.println("Error :(");
   }
 }
 
-void loop() { }
+void loop()
+{
+}
