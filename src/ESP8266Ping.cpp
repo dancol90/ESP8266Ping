@@ -17,6 +17,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "ESP8266Ping.h"
+
 extern "C" void esp_schedule();
 extern "C" void esp_yield();
 
@@ -127,3 +129,5 @@ byte PingClass::_success = 0;
 uint PingClass::_min_time = 0;
 uint PingClass::_avg_time = 0;
 uint PingClass::_max_time = 0;
+
+PingClass Ping;
