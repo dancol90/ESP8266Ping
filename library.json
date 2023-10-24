@@ -1,0 +1,26 @@
+{
+  "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+  "name": "ESP8266Ping",
+  "version": "1.1.0",
+  "description": "Let the ESP8266 ping a remote machine.",
+  "keywords": [
+    "ping",
+    "esp8266"
+  ],
+  "homepage": "https://github.com/dancol90/ESP8266Ping",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dancol90/ESP8266Ping"
+  },
+  "authors": {
+    "name": "Daniele Colanardi",
+    "email": "dancol90@gmail.com",
+    "maintainer": true
+  },
+  "license": "LGPL-2.1-or-later",
+  "frameworks": "arduino",
+  "platforms": "esp8266",
+  "headers": [
+    "ESP8266Ping.h"
+  ]
+}
