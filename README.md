@@ -38,3 +38,31 @@ After `Ping.ping()` has been called, the average response time (in milliseconds)
 ```Arduino
 int avg_time_ms = Ping.averageTime();
 ```
+
+You can run the ping in background, so you can do other stuff while waiting for the response:
+
+```Arduino
+void setup() {
+  // ...
+
+  bool ret = Ping.ping("www.google.com", 5, true); // async = true
+  if (ret) {
+    // ping started successfully
+  }
+}
+
+void loop() {
+
+  if (Ping.hasResult(true)) {
+    // ping is done, get the result
+    bool success = Ping.hasSuccess();
+
+    int avg_time_ms = Ping.averageTime();
+    int min_time_ms = Ping.minTime();
+    int max_time_ms = Ping.maxTime();
+  }
+
+  // do other stuff here
+  delay(200);
+}
+```
