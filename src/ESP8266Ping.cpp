@@ -27,12 +27,17 @@ PingClass::PingClass() :
   _success(0),
   _min_time(0),
   _avg_time(0),
-  _max_time(0)
+  _max_time(0),
+  _done(true),
+  _has_result(false)
 {
 }
 
-bool PingClass::ping(IPAddress dest, unsigned int count) 
+bool PingClass::ping(IPAddress dest, unsigned int count, bool async) 
 {
+  if (!_done)
+    return false;
+
   _expected_count = count;
   _errors = 0;
   _success = 0;
@@ -42,6 +47,7 @@ bool PingClass::ping(IPAddress dest, unsigned int count)
   _max_time = 0;
 
   _done = false;
+  _has_result = false;
   
   memset(&_options, 0, sizeof(struct ping_option));
 
@@ -61,6 +67,10 @@ bool PingClass::ping(IPAddress dest, unsigned int count)
   // Let's go!
   if(ping_start(&_options))
   {
+    // Async mode enabled, do not wait for the result
+    if (async)
+      return true;
+
     // Suspend till the process end
     unsigned int delay_time = _options.coarse_time * 1000;
     // Wait until the process is done
@@ -72,12 +82,12 @@ bool PingClass::ping(IPAddress dest, unsigned int count)
   return (_success > 0);
 }
 
-bool PingClass::ping(const char* host, unsigned int count)
+bool PingClass::ping(const char* host, unsigned int count, bool async)
 {
   IPAddress remote_addr;
 
   if (WiFi.hostByName(host, remote_addr))
-    return ping(remote_addr, count);
+    return ping(remote_addr, count, async);
 
   return false;
 }
@@ -95,6 +105,20 @@ int PingClass::averageTime()
 int PingClass::maxTime()
 {
   return _max_time;
+}
+
+bool PingClass::hasSuccess()
+{
+  return (_success > 0);
+}
+
+bool PingClass::hasResult(bool clear)
+{
+  bool has_result = _has_result;
+  if (clear)
+    _has_result = false;
+
+  return has_result;
 }
 
 void PingClass::_ping_recv_cb(void *opt, void *resp)
@@ -144,6 +168,7 @@ void PingClass::_ping_recv_cb(void *opt, void *resp)
 
     // Done, return to main function
     self->_done = true;
+    self->_has_result = true;
     esp_schedule();
   }
 }
