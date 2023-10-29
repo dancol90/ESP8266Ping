@@ -39,12 +39,15 @@ class PingClass
   public:
     PingClass();
 
-    bool ping(IPAddress dest,   unsigned int count = 5);
-    bool ping(const char* host, unsigned int count = 5);
+    bool ping(IPAddress dest,   unsigned int count = 5, bool async = false);
+    bool ping(const char* host, unsigned int count = 5, bool async = false);
 
     int minTime();
     int averageTime();
     int maxTime();
+
+    bool hasSuccess();
+    bool hasResult(bool clear = true);
 
   protected:
     static void _ping_sent_cb(void *opt, void *pdata);
@@ -57,6 +60,7 @@ class PingClass
     uint _min_time, _avg_time, _max_time;
 
     bool _done;
+    bool _has_result;
 };
 
 extern PingClass Ping;
